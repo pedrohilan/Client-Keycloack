@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <div>
+            <textarea name="jwt" id="jwt" type="text" placeholder="JWT"></textarea>
+            <button onclick='a()'>Mostrar</button>
+            <br/>
+            <br/>
+            <input type="text" placeholder="Digite o usuário" name="username" id="username"/>
+            <input type="password" placeholder="Digite a senha" name="password" id="password"/>
+            <button onclick='generationToken()'>Token</button>
+        
+    </div>
+
+    <script>
+        function a(){
+            
+            token = document.getElementById("jwt"); //token = $("#jwt").val();
+
+            const options = {
+            method: "GET",
+            headers: { "Authorization": "Bearer "+ token.value }
+            };
+
+            fetch("http://localhost:8081/hello", options)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(response.statusText); 
+                }
+                return response.text();
+            })
+            .then(data => {
+                // do something with the data
+                alert(data);
+            })
+            .catch(error => {
+                // handle error
+                alert(error);
+            });
+
+        }
+
+        function generationToken(){
+            
+            username = document.getElementById("username"); //$("#username").val();
+            password = document.getElementById("password"); //$("#password").val();
+
+            const data = {
+            grant_type: "password",
+            username: username.value,
+            password: password.value,
+            client_id: "client_id",
+            client_secret: "client_secret"
+            };
+
+            const options = {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams(data)
+            };
+
+            fetch("uri-token-keycloack", options)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // do something with the data
+                alert(data.access_token);
+            })
+            .catch(error => {
+                // handle error
+                alert(error);
+            });
+
+        }
+    </script>
+</body>
+</html>
